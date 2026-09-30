@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Traveler",
+    "slug": "traveler",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.traveler.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0E1A",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Traveler braucht Zugriff auf deine Fotos, damit du sie hochladen kannst.",
+          "cameraPermission": "Traveler braucht die Kamera, damit du Fotos direkt aufnehmen kannst."
+        }
+      ],
+      [
+        "expo-document-picker",
+        {}
+      ]
+    ],
+    "backgroundColor": "#0A0E1A"
+  }
+}
