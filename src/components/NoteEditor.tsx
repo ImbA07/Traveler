@@ -183,7 +183,7 @@ export function NoteEditor({ noteKey, body, onChange }: Props) {
               onChangeText={(t) => onText(l, t)}
               onKeyPress={(e) => onKey(l, e.nativeEvent.key)}
               placeholder={lines.length === 1 && l.kind === 'text' ? 'Schreib etwas …' : ''}
-              placeholderTextColor={colors.inkSoft + '99'}
+              placeholderTextColor={colors.muted}
               style={[
                 styles.input,
                 l.kind === 'h' && styles.heading,
@@ -202,48 +202,39 @@ export function NoteEditor({ noteKey, body, onChange }: Props) {
 function Tool({ label, onPress, active }: { label: string; onPress: () => void; active?: boolean }) {
   return (
     <Pressable onPress={onPress} style={[styles.tool, active && styles.toolActive]}>
-      <Text style={[styles.toolText, active && { color: colors.light }]}>{label}</Text>
+      <Text style={[styles.toolText, active && { color: colors.ink }]}>{label}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  toolbar: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, paddingBottom: 10 },
-  tool: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: colors.line,
-    backgroundColor: colors.paperDark,
-  },
-  toolActive: { backgroundColor: colors.leather, borderColor: colors.leather },
-  toolText: { fontFamily: fonts.body, fontSize: 13, color: colors.ink },
+  toolbar: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, paddingBottom: 12 },
+  tool: { paddingHorizontal: 10, paddingVertical: 6, borderWidth: 1, borderColor: colors.line },
+  toolActive: { backgroundColor: colors.cream, borderColor: colors.cream },
+  toolText: { fontFamily: fonts.body, fontSize: 12, letterSpacing: 0.6, color: colors.creamDim },
   row: { flexDirection: 'row', alignItems: 'flex-start', minHeight: 32 },
   input: {
     flex: 1,
-    fontFamily: fonts.body,
-    fontSize: 16,
+    fontFamily: fonts.light,
+    fontSize: 17,
     lineHeight: 28,
-    color: colors.ink,
+    color: colors.cream,
     paddingVertical: 0,
     paddingHorizontal: 2,
   },
-  heading: { fontFamily: fonts.title, fontSize: 21, lineHeight: 30, color: colors.leather },
-  done: { textDecorationLine: 'line-through', color: colors.inkSoft },
+  heading: { fontFamily: fonts.title, fontSize: 20, lineHeight: 30, letterSpacing: 1.5, color: colors.cream },
+  done: { textDecorationLine: 'line-through', color: colors.muted },
   box: {
     width: 20,
     height: 20,
     marginTop: 4,
-    marginRight: 8,
-    borderWidth: 1.5,
-    borderColor: colors.leather,
-    borderRadius: 4,
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: colors.creamDim,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF55',
   },
-  boxDone: { backgroundColor: colors.leather },
-  tick: { color: colors.gold, fontSize: 14, lineHeight: 16, fontWeight: '700' },
-  bullet: { width: 20, fontSize: 18, lineHeight: 28, color: colors.leather },
+  boxDone: { backgroundColor: colors.cream, borderColor: colors.cream },
+  tick: { color: colors.ink, fontSize: 13, lineHeight: 16, fontWeight: '700' },
+  bullet: { width: 20, fontSize: 18, lineHeight: 28, color: colors.creamDim },
 });

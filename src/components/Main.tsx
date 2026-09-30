@@ -31,10 +31,11 @@ import {
 } from '../store';
 import { supabase } from '../supabase';
 import { colors, fonts } from '../theme';
-import { ago, daysSince, fileIcon, formatSize, snippet } from '../util';
+import { ago, daysSince, fileLabel, formatSize, snippet } from '../util';
 import { Cleanup } from './Cleanup';
 import { NoteEditor } from './NoteEditor';
 import { Orb } from './Orb';
+import { Corners } from './Sky';
 import { Btn, ConfirmModal, MenuModal, PickerModal, PromptModal } from './Ui';
 
 type Pane = 'folders' | 'list' | 'note' | 'cleanup';
@@ -269,7 +270,7 @@ export function Main() {
                   }}
                   style={[s.tagChip, tagSel === t && s.tagChipOn]}
                 >
-                  <Text style={[s.tagChipText, tagSel === t && { color: colors.leatherDark }]}>
+                  <Text style={[s.tagChipText, tagSel === t && { color: colors.ink }]}>
                     #{t} {c}
                   </Text>
                 </Pressable>
@@ -302,7 +303,7 @@ export function Main() {
         value={query}
         onChangeText={setQuery}
         placeholder="Suchen (Titel, Text, Tags, Dateien) …"
-        placeholderTextColor={colors.inkSoft}
+        placeholderTextColor={colors.muted}
         style={[s.search, Platform.OS === 'web' && ({ outlineStyle: 'none' } as any)]}
       />
       <View style={s.actions}>
@@ -342,7 +343,9 @@ export function Main() {
               onLongPress={() => setModal({ t: 'fileMenu', file: it.file })}
               style={[s.card, s.fileCard]}
             >
-              <Text style={s.fileIcon}>{fileIcon(it.file.mime_type, it.file.name)}</Text>
+              <View style={s.badge}>
+                <Text style={s.badgeText}>{fileLabel(it.file.mime_type, it.file.name)}</Text>
+              </View>
               <View style={{ flex: 1 }}>
                 <Text style={s.cardTitle} numberOfLines={1}>
                   {it.file.name}
@@ -375,13 +378,13 @@ export function Main() {
               value={note.title}
               onChangeText={(t) => upsertNote({ id: note.id, title: t })}
               placeholder="Titel"
-              placeholderTextColor={colors.inkSoft + '99'}
+              placeholderTextColor={colors.muted}
               style={[s.noteTitle, Platform.OS === 'web' && ({ outlineStyle: 'none' } as any)]}
             />
           </View>
           <View style={s.metaRow}>
             <Pressable style={s.metaChip} onPress={() => setModal({ t: 'moveNote', note })}>
-              <Text style={s.metaChipText}>📁 {folderPath(note.folder_id) || 'Kein Ordner'}</Text>
+              <Text style={s.metaChipText}>◇ {folderPath(note.folder_id) || 'Kein Ordner'}</Text>
             </Pressable>
             <Pressable style={[s.metaChip, { borderColor: colors.danger }]} onPress={() => setModal({ t: 'delNote', note })}>
               <Text style={[s.metaChipText, { color: colors.danger }]}>Löschen</Text>
@@ -400,8 +403,8 @@ export function Main() {
         </>
       ) : (
         <View style={s.blank}>
-          <Orb size={150} cracked style={{ opacity: 0.22 }} />
-          <Text style={s.blankText}>Wähle eine Notiz oder schreib eine neue.</Text>
+          <Orb size={240} />
+          <Text style={s.blankText}>Wähle eine Notiz oder schreib eine neue</Text>
         </View>
       )}
     </View>
@@ -430,13 +433,14 @@ export function Main() {
   if (wide) {
     body = (
       <View style={s.book}>
+        <Corners size={14} />
         {Sidebar}
         {pane === 'cleanup' ? (
           CleanupPage
         ) : (
           <>
             {List}
-            <Spiral />
+            <View style={s.divider} />
             {NotePage}
           </>
         )}
@@ -444,7 +448,7 @@ export function Main() {
     );
   } else {
     body = (
-      <View style={[s.book, { margin: 0, borderRadius: 0, borderWidth: 0 }]}>
+      <View style={[s.book, { margin: 0, borderWidth: 0 }]}>
         {pane === 'folders' && Sidebar}
         {pane === 'list' && List}
         {pane === 'note' && NotePage}
@@ -592,7 +596,7 @@ function SideRow({
 }) {
   return (
     <Pressable onPress={onPress} style={[s.sideRow, active && s.sideRowOn, { paddingLeft: 14 + indent * 16 }]}>
-      <Text style={[s.sideText, active && { color: colors.goldSoft }]} numberOfLines={1}>
+      <Text style={[s.sideText, active && { color: colors.cream }]} numberOfLines={1}>
         {label}
       </Text>
       {count !== undefined && <Text style={s.sideCount}>{count}</Text>}
@@ -686,20 +690,10 @@ function TagInput({ tags, onChange }: { tags: string[]; onChange: (t: string[]) 
         onSubmitEditing={add}
         onBlur={add}
         placeholder="＋ Tag"
-        placeholderTextColor={colors.inkSoft}
+        placeholderTextColor={colors.muted}
         style={[s.tagInput, Platform.OS === 'web' && ({ outlineStyle: 'none' } as any)]}
         autoCapitalize="none"
       />
-    </View>
-  );
-}
-
-function Spiral() {
-  return (
-    <View style={s.spiral}>
-      {Array.from({ length: 16 }).map((_, i) => (
-        <View key={i} style={s.ring} />
-      ))}
     </View>
   );
 }
@@ -709,119 +703,100 @@ const s = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     margin: 18,
-    borderRadius: 14,
-    borderWidth: 4,
-    borderColor: colors.leather,
-    overflow: 'hidden',
-    backgroundColor: colors.paper,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: '#0C08083D',
   },
+  divider: { width: 1, backgroundColor: colors.line },
   sidebar: {
     width: 270,
-    backgroundColor: colors.leatherDark,
-    borderRightWidth: 3,
-    borderColor: colors.gold + '99',
+    backgroundColor: '#0A070799',
+    borderRightWidth: 1,
+    borderColor: colors.line,
   },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 14 },
-  brandTitle: { fontFamily: fonts.title, color: colors.light, fontSize: 20, letterSpacing: 4 },
-  sync: { fontFamily: fonts.body, color: colors.goldSoft, fontSize: 12, marginTop: 2 },
+  brand: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16, paddingBottom: 12 },
+  brandTitle: { fontFamily: fonts.title, color: colors.cream, fontSize: 19, letterSpacing: 5 },
+  sync: { fontFamily: fonts.light, color: colors.muted, fontSize: 12, letterSpacing: 0.6, marginTop: 3 },
   sideRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingRight: 12,
+    paddingVertical: 11,
+    paddingRight: 14,
     gap: 8,
+    borderLeftWidth: 2,
+    borderColor: 'transparent',
   },
-  sideRowOn: { backgroundColor: '#FFFFFF14', borderLeftWidth: 3, borderColor: colors.gold },
-  sideText: { flex: 1, fontFamily: fonts.body, color: colors.paper, fontSize: 15 },
-  sideCount: { fontFamily: fonts.body, color: colors.gold, fontSize: 12 },
+  sideRowOn: { backgroundColor: '#EDE8D30F', borderColor: colors.cream },
+  sideText: { flex: 1, fontFamily: fonts.body, color: colors.creamDim, fontSize: 15, letterSpacing: 0.4 },
+  sideCount: { fontFamily: fonts.light, color: colors.muted, fontSize: 12 },
   sideHead: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 14,
-    marginTop: 18,
-    marginBottom: 4,
+    paddingHorizontal: 16,
+    marginTop: 22,
+    marginBottom: 6,
   },
-  sideHeadText: { fontFamily: fonts.title, fontSize: 12, letterSpacing: 3, color: colors.gold },
-  plus: { color: colors.goldSoft, fontSize: 20 },
-  dotsLight: { color: colors.gold, fontSize: 18, paddingHorizontal: 4 },
-  tagWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, paddingHorizontal: 14 },
-  tagChip: { borderWidth: 1, borderColor: colors.gold + '88', borderRadius: 12, paddingHorizontal: 9, paddingVertical: 3 },
-  tagChipOn: { backgroundColor: colors.gold },
-  tagChipText: { color: colors.paper, fontFamily: fonts.body, fontSize: 12 },
-  page: { backgroundColor: colors.paper, padding: 16 },
-  pageHead: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 },
-  pageTitle: { flex: 1, fontFamily: fonts.title, fontSize: 22, color: colors.leather },
+  sideHeadText: { fontFamily: fonts.medium, fontSize: 11, letterSpacing: 3, color: colors.muted },
+  plus: { color: colors.creamDim, fontSize: 20 },
+  dotsLight: { color: colors.muted, fontSize: 18, paddingHorizontal: 4 },
+  tagWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, paddingHorizontal: 16 },
+  tagChip: { borderWidth: 1, borderColor: colors.line, paddingHorizontal: 9, paddingVertical: 3 },
+  tagChipOn: { backgroundColor: colors.cream, borderColor: colors.cream },
+  tagChipText: { color: colors.creamDim, fontFamily: fonts.body, fontSize: 12 },
+  page: { padding: 18 },
+  pageHead: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 },
+  pageTitle: { flex: 1, fontFamily: fonts.title, fontSize: 21, letterSpacing: 3, color: colors.cream },
   back: { paddingRight: 6 },
-  backText: { fontSize: 26, color: colors.leather },
+  backText: { fontSize: 26, color: colors.cream },
   search: {
     borderWidth: 1,
     borderColor: colors.line,
-    backgroundColor: '#FFFFFF55',
-    borderRadius: 8,
+    backgroundColor: '#FFFFFF08',
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 9,
     fontFamily: fonts.body,
-    color: colors.ink,
-    marginBottom: 10,
+    fontSize: 14,
+    color: colors.cream,
+    marginBottom: 12,
   },
-  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 12 },
-  empty: { fontFamily: fonts.hand, fontSize: 22, color: colors.inkSoft, textAlign: 'center', marginTop: 40 },
+  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 },
+  empty: { fontFamily: fonts.light, fontSize: 18, color: colors.muted, textAlign: 'center', marginTop: 40, lineHeight: 26 },
   card: {
-    backgroundColor: '#FFFFFF66',
     borderWidth: 1,
-    borderColor: colors.line,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.gold,
-    borderRadius: 8,
-    padding: 12,
+    borderColor: colors.lineSoft,
+    backgroundColor: '#FFFFFF06',
+    padding: 13,
     marginBottom: 8,
   },
-  cardOn: { backgroundColor: '#FFFFFFAA', borderLeftColor: colors.leather },
-  fileCard: { flexDirection: 'row', alignItems: 'center', gap: 10, borderLeftColor: colors.leatherLight },
-  fileIcon: { fontSize: 24 },
-  cardTitle: { fontFamily: fonts.bodyBold, fontSize: 15, color: colors.ink },
-  cardSub: { fontFamily: fonts.body, fontSize: 13, color: colors.inkSoft, marginTop: 2 },
-  cardMeta: { fontFamily: fonts.body, fontSize: 11, color: colors.inkSoft, marginTop: 4 },
-  dots: { fontSize: 22, color: colors.inkSoft, paddingHorizontal: 6 },
-  noteTitle: { flex: 1, fontFamily: fonts.hand, fontSize: 34, color: colors.leather, paddingVertical: 0 },
-  metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
-  metaChip: { borderWidth: 1, borderColor: colors.line, borderRadius: 14, paddingHorizontal: 10, paddingVertical: 4 },
-  metaChipText: { fontFamily: fonts.body, fontSize: 12, color: colors.inkSoft },
-  tagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, alignItems: 'center', marginBottom: 12 },
-  tagOn: { backgroundColor: colors.leather, borderRadius: 12, paddingHorizontal: 9, paddingVertical: 3 },
-  tagOnText: { color: colors.goldSoft, fontFamily: fonts.body, fontSize: 12 },
-  tagInput: { fontFamily: fonts.body, fontSize: 13, color: colors.ink, minWidth: 70, paddingVertical: 2 },
-  blank: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
-  blankText: { fontFamily: fonts.hand, fontSize: 26, color: colors.inkSoft },
-  spiral: {
-    width: 26,
-    backgroundColor: colors.paperDark,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderColor: colors.line,
-  },
-  ring: {
-    width: 30,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.leatherLight,
-    borderWidth: 1,
-    borderColor: colors.leatherDark,
-  },
+  cardOn: { borderColor: colors.creamDim, backgroundColor: '#EDE8D30F' },
+  fileCard: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  badge: { width: 40, height: 40, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
+  badgeText: { fontFamily: fonts.medium, fontSize: 10, letterSpacing: 1, color: colors.creamDim },
+  cardTitle: { fontFamily: fonts.medium, fontSize: 16, color: colors.cream },
+  cardSub: { fontFamily: fonts.light, fontSize: 14, color: colors.creamDim, marginTop: 3, lineHeight: 20 },
+  cardMeta: { fontFamily: fonts.light, fontSize: 12, letterSpacing: 0.4, color: colors.muted, marginTop: 5 },
+  dots: { fontSize: 22, color: colors.muted, paddingHorizontal: 6 },
+  noteTitle: { flex: 1, fontFamily: fonts.title, fontSize: 26, letterSpacing: 2, color: colors.cream, paddingVertical: 0 },
+  metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 10 },
+  metaChip: { borderWidth: 1, borderColor: colors.line, paddingHorizontal: 10, paddingVertical: 4 },
+  metaChipText: { fontFamily: fonts.body, fontSize: 12, letterSpacing: 0.5, color: colors.creamDim },
+  tagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, alignItems: 'center', marginBottom: 14 },
+  tagOn: { borderWidth: 1, borderColor: colors.creamDim, paddingHorizontal: 9, paddingVertical: 3 },
+  tagOnText: { color: colors.cream, fontFamily: fonts.body, fontSize: 12 },
+  tagInput: { fontFamily: fonts.body, fontSize: 13, color: colors.cream, minWidth: 70, paddingVertical: 2 },
+  blank: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 18 },
+  blankText: { fontFamily: fonts.light, fontSize: 18, letterSpacing: 1.5, color: colors.muted },
   toast: {
     position: 'absolute',
     bottom: 26,
     alignSelf: 'center',
-    backgroundColor: colors.leatherDark,
-    borderColor: colors.gold,
+    backgroundColor: colors.panel,
+    borderColor: colors.creamDim,
     borderWidth: 1,
-    borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 9,
     maxWidth: '90%',
   },
-  toastText: { color: colors.paper, fontFamily: fonts.body, fontSize: 13 },
+  toastText: { color: colors.cream, fontFamily: fonts.body, fontSize: 13 },
 });

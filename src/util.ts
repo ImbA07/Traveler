@@ -19,15 +19,16 @@ export function ago(iso: string | null | undefined): string {
   return `vor ${Math.floor(d / 365)} Jahren`;
 }
 
-export function fileIcon(mime: string | null, name: string): string {
+export function fileLabel(mime: string | null, name: string): string {
   const n = name.toLowerCase();
-  if (mime?.startsWith('image/')) return '🖼';
-  if (mime === 'application/pdf' || n.endsWith('.pdf')) return '📕';
-  if (/\.(docx?|odt|rtf)$/.test(n)) return '📘';
-  if (/\.(xlsx?|csv|ods)$/.test(n)) return '📗';
-  if (/\.(pptx?|odp)$/.test(n)) return '📙';
-  if (/\.(zip|rar|7z)$/.test(n)) return '🗜';
-  return '📄';
+  if (mime?.startsWith('image/')) return 'IMG';
+  if (mime?.startsWith('video/')) return 'VID';
+  if (mime === 'application/pdf' || n.endsWith('.pdf')) return 'PDF';
+  if (/\.(docx?|odt|rtf)$/.test(n)) return 'DOC';
+  if (/\.(xlsx?|csv|ods)$/.test(n)) return 'XLS';
+  if (/\.(pptx?|odp)$/.test(n)) return 'PPT';
+  if (/\.(zip|rar|7z)$/.test(n)) return 'ZIP';
+  return 'FILE';
 }
 
 export function snippet(body: string): string {

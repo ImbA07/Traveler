@@ -1,24 +1,23 @@
+// Star-map look: warm black sky, cream light, hairline linework.
 export const colors = {
-  night: '#0A0E1A',
-  nightSoft: '#141B30',
-  leather: '#3B2618',
-  leatherDark: '#26160C',
-  leatherLight: '#5A3A24',
-  gold: '#C9A85C',
-  goldSoft: '#E4CF95',
-  paper: '#EFE6CF',
-  paperDark: '#E2D6B8',
-  line: '#C8B98F',
-  ink: '#2B2418',
-  inkSoft: '#6B5D42',
-  light: '#F6F3EA',
-  danger: '#9C3B2E',
-  ok: '#4F7A4A',
+  bg: '#0B0808',
+  panel: '#120D0D',
+  panelAlt: '#1A1313',
+  line: '#3B3231',
+  lineSoft: '#261E1E',
+  cream: '#EDE8D3',
+  creamDim: '#B9B3A0',
+  muted: '#8D8679',
+  glow: '#E8C98C',
+  danger: '#D0715F',
+  ok: '#9DB88A',
+  ink: '#0E0B0B', // text on cream surfaces
 };
 
 export const fonts = {
   title: 'Cinzel_600SemiBold',
-  body: 'Lora_400Regular',
-  bodyBold: 'Lora_700Bold',
-  hand: 'Caveat_500Medium',
+  body: 'Jost_400Regular',
+  light: 'Jost_300Light',
+  medium: 'Jost_500Medium',
+  bold: 'Jost_600SemiBold',
 };

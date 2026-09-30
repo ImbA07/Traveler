@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { colors, fonts } from '../theme';
+import { Corners } from './Sky';
 
 export function Btn({
   label,
@@ -36,7 +37,8 @@ export function Btn({
       <Text
         style={[
           s.btnText,
-          kind === 'ghost' && { color: colors.leather },
+          kind === 'ghost' && { color: colors.cream },
+          kind === 'danger' && { color: colors.ink },
         ]}
       >
         {label}
@@ -50,6 +52,7 @@ function Sheet({ title, children, onClose }: { title: string; children: React.Re
     <Modal transparent animationType="fade" onRequestClose={onClose}>
       <Pressable style={s.backdrop} onPress={onClose}>
         <Pressable style={s.sheet} onPress={() => {}}>
+          <Corners />
           <Text style={s.sheetTitle}>{title}</Text>
           {children}
         </Pressable>
@@ -81,7 +84,7 @@ export function PromptModal({
         onChangeText={setV}
         onSubmitEditing={() => v.trim() && onSubmit(v.trim())}
         style={s.input}
-        placeholderTextColor={colors.inkSoft}
+        placeholderTextColor={colors.muted}
       />
       <View style={s.row}>
         <Btn label="Abbrechen" kind="ghost" onPress={onClose} />
@@ -170,17 +173,17 @@ const s = StyleSheet.create({
   btn: {
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  btnPrimary: { backgroundColor: colors.leather },
-  btnGhost: { backgroundColor: 'transparent', borderWidth: 1, borderColor: colors.leather },
+  btnPrimary: { backgroundColor: colors.cream },
+  btnGhost: { backgroundColor: 'transparent', borderWidth: 1, borderColor: colors.creamDim },
   btnDanger: { backgroundColor: colors.danger },
-  btnText: { color: colors.light, fontFamily: fonts.bodyBold, fontSize: 14 },
+  btnText: { color: colors.ink, fontFamily: fonts.medium, fontSize: 13, letterSpacing: 1.2, textTransform: 'uppercase' },
   backdrop: {
     flex: 1,
-    backgroundColor: '#000000AA',
+    backgroundColor: '#000000B3',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
@@ -188,24 +191,23 @@ const s = StyleSheet.create({
   sheet: {
     width: '100%',
     maxWidth: 420,
-    backgroundColor: colors.paper,
-    borderRadius: 12,
-    padding: 18,
-    borderWidth: 2,
-    borderColor: colors.gold,
+    backgroundColor: colors.panel,
+    padding: 22,
+    borderWidth: 1,
+    borderColor: colors.line,
   },
-  sheetTitle: { fontFamily: fonts.title, fontSize: 18, color: colors.leather, marginBottom: 12 },
+  sheetTitle: { fontFamily: fonts.title, fontSize: 17, letterSpacing: 2, color: colors.cream, marginBottom: 14 },
   input: {
-    borderBottomWidth: 1.5,
-    borderColor: colors.leather,
+    borderBottomWidth: 1,
+    borderColor: colors.creamDim,
     fontFamily: fonts.body,
     fontSize: 16,
-    color: colors.ink,
+    color: colors.cream,
     paddingVertical: 6,
-    marginBottom: 16,
+    marginBottom: 18,
   },
   row: { flexDirection: 'row', justifyContent: 'flex-end', gap: 10 },
-  text: { fontFamily: fonts.body, color: colors.ink, marginBottom: 16, lineHeight: 22 },
-  menuItem: { paddingVertical: 12, borderBottomWidth: 1, borderColor: colors.line },
-  menuText: { fontFamily: fonts.body, fontSize: 16, color: colors.ink },
+  text: { fontFamily: fonts.body, color: colors.creamDim, marginBottom: 18, lineHeight: 22 },
+  menuItem: { paddingVertical: 13, borderBottomWidth: 1, borderColor: colors.lineSoft },
+  menuText: { fontFamily: fonts.body, fontSize: 16, color: colors.cream },
 });

@@ -43,7 +43,7 @@ async function createWindow() {
     height: 820,
     minWidth: 420,
     minHeight: 600,
-    backgroundColor: '#0A0E1A',
+    backgroundColor: '#0B0808',
     title: 'Traveler',
     icon: path.join(__dirname, '..', 'build', 'icon.png'),
     webPreferences: { contextIsolation: true, nodeIntegration: false },

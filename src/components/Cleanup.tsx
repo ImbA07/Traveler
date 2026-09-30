@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { FileItem } from '../store';
 import { colors, fonts } from '../theme';
-import { ago, daysSince, fileIcon, formatSize } from '../util';
+import { ago, daysSince, fileLabel, formatSize } from '../util';
 import { Btn, ConfirmModal } from './Ui';
 
 const FREE_LIMIT = 1024 * 1024 * 1024; // 1 GB (free Supabase plan)
@@ -62,11 +62,11 @@ export function Cleanup({ files, onDelete }: { files: FileItem[]; onDelete: (ids
         ))}
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 90 }}>
-        {list.length === 0 && <Text style={s.empty}>Nichts zum Aufräumen gefunden. 🎉</Text>}
+        {list.length === 0 && <Text style={s.empty}>Nichts zum Aufräumen gefunden.</Text>}
         {list.map((f) => (
           <Pressable key={f.id} onPress={() => setPicked((p) => ({ ...p, [f.id]: !p[f.id] }))} style={s.row}>
             <View style={[s.box, picked[f.id] && s.boxOn]}>{picked[f.id] && <Text style={s.tick}>✓</Text>}</View>
-            <Text style={{ fontSize: 22 }}>{fileIcon(f.mime_type, f.name)}</Text>
+            <View style={s.badge}><Text style={s.badgeText}>{fileLabel(f.mime_type, f.name)}</Text></View>
             <View style={{ flex: 1 }}>
               <Text style={s.name} numberOfLines={1}>
                 {f.name}
@@ -102,33 +102,35 @@ export function Cleanup({ files, onDelete }: { files: FileItem[]; onDelete: (ids
 function Chip({ label, on, onPress }: { label: string; on: boolean; onPress: () => void }) {
   return (
     <Pressable onPress={onPress} style={[s.chip, on && s.chipOn]}>
-      <Text style={[s.chipText, on && { color: colors.light }]}>{label}</Text>
+      <Text style={[s.chipText, on && { color: colors.ink }]}>{label}</Text>
     </Pressable>
   );
 }
 
 const s = StyleSheet.create({
-  hint: { fontFamily: fonts.body, color: colors.inkSoft, fontSize: 13, lineHeight: 19, marginBottom: 10 },
-  bar: { height: 10, borderRadius: 5, backgroundColor: colors.paperDark, borderWidth: 1, borderColor: colors.line, overflow: 'hidden' },
-  barFill: { height: '100%', backgroundColor: colors.gold },
-  barText: { fontFamily: fonts.body, fontSize: 12, color: colors.inkSoft, marginTop: 4, marginBottom: 10 },
+  hint: { fontFamily: fonts.light, color: colors.creamDim, fontSize: 14, lineHeight: 21, marginBottom: 12 },
+  bar: { height: 4, backgroundColor: colors.lineSoft, overflow: 'hidden' },
+  barFill: { height: '100%', backgroundColor: colors.cream },
+  barText: { fontFamily: fonts.body, fontSize: 12, letterSpacing: 1, color: colors.muted, marginTop: 6, marginBottom: 12 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
-  chip: { borderWidth: 1, borderColor: colors.leather, borderRadius: 14, paddingHorizontal: 12, paddingVertical: 5 },
-  chipOn: { backgroundColor: colors.leather },
-  chipText: { fontFamily: fonts.body, fontSize: 12, color: colors.leather },
-  empty: { fontFamily: fonts.hand, fontSize: 24, color: colors.inkSoft, textAlign: 'center', marginTop: 40 },
+  chip: { borderWidth: 1, borderColor: colors.line, paddingHorizontal: 12, paddingVertical: 5 },
+  chipOn: { backgroundColor: colors.cream, borderColor: colors.cream },
+  chipText: { fontFamily: fonts.body, fontSize: 12, letterSpacing: 0.6, color: colors.creamDim },
+  empty: { fontFamily: fonts.light, fontSize: 18, color: colors.muted, textAlign: 'center', marginTop: 40 },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    padding: 10,
+    gap: 12,
+    paddingVertical: 12,
     borderBottomWidth: 1,
-    borderColor: colors.line,
+    borderColor: colors.lineSoft,
   },
-  box: { width: 22, height: 22, borderWidth: 1.5, borderColor: colors.leather, borderRadius: 4, alignItems: 'center', justifyContent: 'center' },
-  boxOn: { backgroundColor: colors.leather },
-  tick: { color: colors.gold, fontSize: 14, fontWeight: '700' },
-  name: { fontFamily: fonts.bodyBold, fontSize: 14, color: colors.ink },
-  meta: { fontFamily: fonts.body, fontSize: 12, color: colors.inkSoft, marginTop: 2 },
+  box: { width: 20, height: 20, borderWidth: 1, borderColor: colors.creamDim, alignItems: 'center', justifyContent: 'center' },
+  boxOn: { backgroundColor: colors.cream, borderColor: colors.cream },
+  tick: { color: colors.ink, fontSize: 13, fontWeight: '700' },
+  badge: { width: 40, height: 40, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
+  badgeText: { fontFamily: fonts.medium, fontSize: 10, letterSpacing: 1, color: colors.creamDim },
+  name: { fontFamily: fonts.medium, fontSize: 15, color: colors.cream },
+  meta: { fontFamily: fonts.light, fontSize: 12, color: colors.muted, marginTop: 2 },
   footer: { position: 'absolute', bottom: 14, left: 16, right: 16, alignItems: 'center' },
 });
